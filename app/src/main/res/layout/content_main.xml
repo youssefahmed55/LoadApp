@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ConstraintLayout  -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+    <!-- ImageView Appears Downloading Image  -->
+    <ImageView
+        android:id="@+id/downloadImage_main"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/downloadImage"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/download_image"
+        />
+    <!-- RadioGroup To Select Which File To Download  -->
+    <RadioGroup
+        android:id="@+id/radioGroupOption_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/custom_button"
+        app:layout_constraintTop_toBottomOf="@id/downloadImage_main"
+        >
+        <!-- RadioButton  -->
+        <RadioButton
+            android:id="@+id/downloadGlide_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_app_margin"
+            android:text="@string/Glide_Image_Loading_Library_by_BumpTech"
+            android:textSize="@dimen/default_text_size" />
+
+        <!-- RadioButton  -->
+        <RadioButton
+            android:id="@+id/downloadLoadApp_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_app_margin"
+            android:text="@string/LoadApp_Current_repository_by_Udacity"
+            android:textSize="@dimen/default_text_size" />
+
+        <!-- RadioButton  -->
+        <RadioButton
+            android:id="@+id/downloadRetrofit_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_app_margin"
+            android:text="@string/Retrofit_Type_safe_HTTP_client_for_Android_and_Java_by_Square_Inc"
+            android:textSize="@dimen/default_text_size" />
+    </RadioGroup>
+    <!-- LoadingButton Custom Button  -->
+    <com.udacity.LoadingButton
+        android:id="@+id/custom_button"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupOption_main"
+        app:button_color="@color/buttonColor"
+        app:button_loading_color="@color/loadingColor"
+        app:button_disable_color="@color/disableColor"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

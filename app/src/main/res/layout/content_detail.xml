@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- MotionLayout -->
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_detail_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/default_app_margin"
+    android:padding="@dimen/default_app_margin"
+    app:layoutDescription="@xml/content_detail_scene"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".DetailActivity"
+    tools:showIn="@layout/activity_detail">
+    <!-- TextView -->
+    <TextView
+        android:id="@+id/fileTextView_Detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/file_name"
+        android:textColor="@color/disableColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/statusTextView_Detail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.103" />
+    <!-- TextView Appears Name Of File -->
+    <TextView
+        android:id="@+id/fileTextViewValue_Detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:width="240dp"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/fileTextView_Detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fileTextView_Detail" />
+
+    <!-- TextView -->
+    <TextView
+        android:id="@+id/statusTextView_Detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="388dp"
+        android:text="@string/status"
+        android:textColor="@color/disableColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/okButton_Detail"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- TextView Appears Status Of Downloading File  -->
+    <TextView
+        android:id="@+id/statusTextViewValue_Detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:width="240dp"
+        android:textSize="18sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/fileTextViewValue_Detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.446"
+        app:layout_constraintStart_toEndOf="@+id/statusTextView_Detail" />
+
+    <!-- Button To Back To Previous Activity  -->
+    <Button
+        android:id="@+id/okButton_Detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:padding="20dp"
+        android:text="@string/Ok"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:alpha="1.00"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

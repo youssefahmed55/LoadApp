@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">LoadApp</string>
+    <string name="app_description">Download files from Internet</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="notification_title">Udacity: Android Kotlin Nanodegree </string>
+    <string name="notification_button">Check the status</string>
+
+    <string name="button_name">Download</string>
+    <string name="button_loading">We are loading </string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="downloadImage">downloadImage</string>
+
+    <string name="select">Please Select The File To Download</string>
+    <string name="Glide_Image_Loading_Library_by_BumpTech">Glide - Image Loading Library by BumpTech</string>
+    <string name="LoadApp_Current_repository_by_Udacity">LoadApp - Current repository by Udacity</string>
+    <string name="Retrofit_Type_safe_HTTP_client_for_Android_and_Java_by_Square_Inc">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
+    <string name="Ok">OK</string>
+    <string name="file_name">File name:</string>
+    <string name="status">Status:</string>
+    <string name="Check_internet_connection">Check internet connection</string>
+    <string name="There_was_an_error_loading_Try_again_please">There was an error loading. Try again please.</string>
+
+
+</resources>

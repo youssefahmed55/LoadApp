@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        setOnClickOnCustomDownloadButton() //Set On Click On Custom Button
+        setOnClickOnCustomDownloadButton() //Set On Click On Custom Loading Button
 
     }
 

@@ -27,16 +27,14 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
-    private var downloadID: Long = 0
-    private var loadURL: String = ""
-
-    private lateinit var notificationManager: NotificationManager
+    private lateinit var download_Manager: DownloadManager
     private lateinit var pendingIntent: PendingIntent
-    private lateinit var downloadManager: DownloadManager
-    private var downloadStatus = ""
-    private var downloadedFileNumber :Int= 0
-    private var downloadedFileName = ""
-
+    private lateinit var notification_Manager: NotificationManager
+    private var download_ID: Long ?= null
+    private var downloadedFileName :String ?= null
+    private var downloadStatus : String ?= null
+    private var downloadedFileNumber : Int ?= null
+    private var url: String ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,55 +43,52 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        setOnClickOnCustomButton() //Set On Click On Custom Button
-        setOnClickOnRadioGroup()   //Set On Click On Radio Group Items
+        setOnClickOnCustomDownloadButton() //Set On Click On Custom Button
 
     }
 
-    private fun setOnClickOnRadioGroup() {
-        radioGroupOption_main.setOnCheckedChangeListener { _, checkedId ->
-            custom_button.buttonState = ButtonState.Completed
-            val radioButton: RadioButton = radioGroupOption_main.findViewById(checkedId)
-            val index = radioGroupOption_main.indexOfChild(radioButton)
-            downloadedFileName = radioButton.text.toString()
-            downloadedFileNumber = index + 1
-            loadURL = when (index) {
-                0 -> GLIDE_URL
-                1 -> LOAD_URL
-                2 -> RETROFIT_URL
-                else -> ""
-            }
-        }
-    }
-
-    private fun setOnClickOnCustomButton() {
-        custom_button.setOnClickListener {
-            custom_button.buttonState = ButtonState.Clicked
-            if (loadURL.isEmpty()) {
-                Toast.makeText(this, R.string.select, Toast.LENGTH_SHORT).show()
-                custom_button.buttonState = ButtonState.Disabled
-            } else {
-                if (isOnline(this)) { //Check Internet Connection
-                    custom_button.buttonState = ButtonState.Loading
-                    try {
-                        download()
-                    } catch (e: Exception) {
-                        Log.e("MainActivity", e.toString())
-                        Toast.makeText(
-                            this,
-                            getString(R.string.There_was_an_error_loading_Try_again_please),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    custom_button.buttonState = ButtonState.Completed
-                    Toast.makeText(this, getString(R.string.Check_internet_connection), Toast.LENGTH_SHORT).show()
+    private fun setOnClickOnCustomDownloadButton() {
+        customDownloadButton_main.setOnClickListener {
+            val checkedRadioId = radioGroupOption_main.checkedRadioButtonId
+            if(checkedRadioId != -1)  //If One Of RadioButtons Checked
+            {
+                val radioButton: RadioButton = radioGroupOption_main.findViewById(checkedRadioId)
+                val index = radioGroupOption_main.indexOfChild(radioButton)
+                downloadedFileName = radioButton.text.toString()
+                downloadedFileNumber = index + 1
+                url = when (index) {
+                    0 -> GLIDE_URL
+                    1 -> LOAD_URL
+                    2 -> RETROFIT_URL
+                    else -> ""
                 }
+                checkInternetAndSendNotification()
+
+            }else{
+                customDownloadButton_main.buttonState = ButtonState.Completed
+                Toast.makeText(this, R.string.select, Toast.LENGTH_SHORT).show()
+
             }
 
-            createChannel() //Create Channel
-
         }
+    }
+
+    private fun checkInternetAndSendNotification() {
+        if (isInternetOnline(this)) { //Check Internet Connection
+            customDownloadButton_main.buttonState = ButtonState.Loading
+            try {
+                download()
+                createChannel() //Create Channel
+            } catch (e: Exception) {
+                Toast.makeText(this, getString(R.string.There_was_an_error_loading_Try_again_please), Toast.LENGTH_SHORT).show()
+                Log.d("MainActivity", e.toString())
+            }
+
+        }else{
+            customDownloadButton_main.buttonState = ButtonState.Completed
+            Toast.makeText(this, getString(R.string.Check_internet_connection), Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -101,18 +96,15 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
-            loadURL = ""
-            downloadGlide_main.isChecked = false
-            downloadRetrofit_main.isChecked = false
-            downloadLoadApp_main.isChecked = false
-            custom_button.buttonState = ButtonState.Disabled
+            url = ""
+            customDownloadButton_main.buttonState = ButtonState.Completed
 
 
             if (id != null) {
                 val query = DownloadManager.Query()
                     .setFilterById(id)
 
-                val cursor = downloadManager.query(query)
+                val cursor = download_Manager.query(query)
 
                 if (cursor.moveToFirst()) {
                     val status: Int = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
@@ -125,9 +117,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 //Initialize notificationManager
-                notificationManager = ContextCompat.getSystemService(this@MainActivity, NotificationManager::class.java) as NotificationManager
+                notification_Manager = ContextCompat.getSystemService(this@MainActivity, NotificationManager::class.java) as NotificationManager
                 //sendNotification
-                notificationManager.sendNotification("The Project $downloadedFileNumber repository is $downloadStatus", CHANNEL_ID, applicationContext
+                notification_Manager.sendNotification("The Project $downloadedFileNumber repository is $downloadStatus", CHANNEL_ID, applicationContext
                 )
 
             }
@@ -138,21 +130,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun download() {
         val request =
-            DownloadManager.Request(Uri.parse(loadURL))
+            DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.notification_title))
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
         //Initialize downloadManager
-        downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID = downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        download_Manager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        download_ID = download_Manager.enqueue(request)// enqueue puts the download request in the queue.
 
 
 
     }
 
-    private fun isOnline(context: Context): Boolean {
+    private fun isInternetOnline(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
@@ -208,7 +200,7 @@ class MainActivity : AppCompatActivity() {
         downloadedFileName = ""
         downloadedFileNumber = 0
         downloadStatus = ""
-        loadURL = ""
+        url = ""
 
     }
 
@@ -244,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         private const val GLIDE_URL = "https://github.com/bumptech/glide/archive/master.zip"
         private const val LOAD_URL = "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val RETROFIT_URL = "https://github.com/square/retrofit/archive/master.zip"
-        private const val NOTIFICATION_ID = 1
+        private const val NOTIFICATION_ID = 0
         private const val CHANNEL_ID = "my_channelId"
 
     }

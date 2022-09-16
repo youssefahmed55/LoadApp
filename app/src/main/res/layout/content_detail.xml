@@ -21,7 +21,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:text="@string/file_name"
-        android:textColor="@color/disableColor"
+        android:textColor="@color/hintColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/statusTextView_Detail"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginBottom="388dp"
         android:text="@string/status"
-        android:textColor="@color/disableColor"
+        android:textColor="@color/hintColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/okButton_Detail"
         app:layout_constraintStart_toStartOf="parent" />

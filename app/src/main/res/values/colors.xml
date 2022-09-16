@@ -7,5 +7,5 @@
     <color name="imageBackgroundColor">#003D4B</color>
     <color name="buttonColor">#07C2AA</color>
     <color name="loadingColor">#004349</color>
-    <color name="disableColor">#A3A19D</color>
+    <color name="hintColor">#A3A19D</color>
 </resources>

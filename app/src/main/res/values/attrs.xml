@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LoadingButton">
-        <attr name="button_color" format="color" />
-        <attr name="button_loading_color" format="color" />
-        <attr name="button_disable_color" format="color" />
+        <attr name="defaultButton_color" format="color" />
+        <attr name="loadingButton_color" format="color" />
     </declare-styleable>
 </resources>

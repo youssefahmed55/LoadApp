@@ -6,6 +6,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
+import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
 import java.util.*
 import kotlin.properties.Delegates
@@ -14,112 +15,97 @@ class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var widthSize = 100
-    private var heightSize = 50
-    private var bgColor: Int = 0
-    private var bgColorLoading: Int = 0
-    private var bgColorDisabled: Int = 0
+    private var sizeWidth = 150
+    private var sizeHeight = 100
+    private var animatorValue = ValueAnimator()
     private var txtColor: Int = Color.WHITE
-    private var valueAnimator = ValueAnimator()
+    private var bgColorLoading: Int = 0
+    private var backGroundColor: Int = 0
 
-    @Volatile
-    private var progress: Int = 0 //
-
-    private val rect = RectF(
-        740f,
+    private val rectDraw = RectF(
+        750f,
         40f,
-        810f,
+        820f,
         110f
     )
 
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { //
+     private val myPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { //
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
-        textSize = 55.0f
+        textSize = 50.0f
         typeface = Typeface.create("", Typeface.BOLD)
     }
 
-    init {
-        isClickable = true
+    @Volatile
+    private var prog: Int = 0
 
-        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
-            bgColor = getColor(R.styleable.LoadingButton_button_color, 0)
-            bgColorDisabled = getColor(R.styleable.LoadingButton_button_disable_color, 0)
-            bgColorLoading = getColor(R.styleable.LoadingButton_button_loading_color, 0)
-        }
-        valueAnimator = ValueAnimator.ofInt(0, 100).apply {
-            duration = 3000
+    init {
+
+        isClickable = true
+        animatorValue = ValueAnimator.ofInt(0, 100).apply {
+            duration = 300
             interpolator = LinearInterpolator()
-            addUpdateListener { valueAnimator ->
-                progress = this.animatedValue as Int
+            addUpdateListener {
+                prog = this.animatedValue as Int
                 invalidate()
                 requestLayout()
             }
+        }
+
+        context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
+            backGroundColor = getColor(R.styleable.LoadingButton_defaultButton_color, 0)
+            bgColorLoading = getColor(R.styleable.LoadingButton_loadingButton_color, 0)
         }
     }
 
-    var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
-        when (new) {
-            ButtonState.Loading -> {
-                valueAnimator.start()
-                invalidate()
-                requestLayout()
-            }
+    var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { _, _, s ->
+        when (s) {
             ButtonState.Completed -> {
-                valueAnimator.cancel()
+                animatorValue.cancel()
                 invalidate()
                 requestLayout()
             }
-            ButtonState.Disabled -> {
-                valueAnimator.cancel()
+
+            ButtonState.Loading -> {
+                animatorValue.start()
                 invalidate()
                 requestLayout()
             }
+
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        //Drawing Button
-        val width = width
-        val height = height
-        paint.color =
-            if (buttonState === ButtonState.Disabled)
-                bgColorDisabled
-            else
-                bgColor
-        if (buttonState === ButtonState.Loading) {
+        myPaint.color = backGroundColor
 
-            //Drawing button loading
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-            paint.color = bgColorLoading
+        if (buttonState === ButtonState.Loading) {
+            //Drawing Loading Button
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), myPaint)
+            myPaint.color = bgColorLoading
             canvas.drawRect(
                 0f, 0f,
-                (width * (progress.toDouble() / 100)).toFloat(), height.toFloat(), paint
+                (width * (prog.toDouble() / 100)).toFloat(), height.toFloat(), myPaint
             )
-            //Drawing loading arc
-            paint.color = resources.getColor(R.color.colorAccent)
-            canvas.drawArc(rect, 0f, (360 * (progress.toDouble() / 100)).toFloat(), true, paint)
+            //Drawing arc Loading Button
+            myPaint.color =  ContextCompat.getColor(context,R.color.colorAccent)
+            canvas.drawArc(rectDraw, 0f, (360 * (prog.toDouble() / 100)).toFloat(), true, myPaint)
         } else {
 
-            //drawing normal button
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
+            //drawing Normal Default Button
+            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), myPaint)
         }
 
-        paint.color = txtColor
-        val textHeight = (height / 2 - (paint.descent() + paint.ascent()) / 2)
+        myPaint.color = txtColor
+        val textHeight = (height / 2 - (myPaint.descent() + myPaint.ascent()) / 2)
         val buttonLabel =
             if (buttonState === ButtonState.Loading)
                 resources.getString(R.string.button_loading)
             else
                 resources.getString(R.string.button_name)
-        canvas.drawText(
-            buttonLabel.toUpperCase(Locale.ROOT),
-            (width / 2).toFloat(),
-            textHeight,
-            paint
+        canvas.drawText(buttonLabel.toUpperCase(Locale.ROOT), (width / 2).toFloat(), textHeight, myPaint
         )
 
 
@@ -133,8 +119,8 @@ class LoadingButton @JvmOverloads constructor(
             heightMeasureSpec,
             0
         )
-        widthSize = w
-        heightSize = h
+        sizeWidth = w
+        sizeHeight = h
         setMeasuredDimension(w, h)
 
     }
